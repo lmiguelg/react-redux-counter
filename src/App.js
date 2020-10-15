@@ -1,26 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { connect, useDispatch } from "react-redux";
+import * as actions from "./actions";
+import PropTypes from "prop-types";
+import counterReducer from "./reducers/counter";
 
-function App() {
+function App({ counter, isLogged, increment, decrement, signin }) {
+  const dispatch = useDispatch();
+  const n = 100;
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Counter: {counter}</h1>
+      {isLogged ? <h3>Hiden info</h3> : null}
+
+      <button onClick={() => increment(n)}>+</button>
+      <button onClick={() => decrement(n)}>-</button>
+      <button onClick={() => signin()}>Login</button>
     </div>
   );
 }
 
-export default App;
+App.propTypes = {
+  counter: PropTypes.number.isRequired,
+  isLogged: PropTypes.bool.isRequired,
+};
+
+const mapStateToProps = ({ counter, isLogged }) => {
+  return {
+    counter,
+    isLogged
+  };
+};
+
+const mapDispatchToProps = {
+  increment:actions.incrementAction,
+  decrement: actions.decrementAction,
+  signin: actions.signinAction
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(App);
